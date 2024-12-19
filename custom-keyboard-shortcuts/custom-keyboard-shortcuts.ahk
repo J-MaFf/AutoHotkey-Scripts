@@ -39,4 +39,3 @@ paste(data) {
     ; Finally, restore original clipboard contents
     A_Clipboard := clipbackup
 }
-; test
