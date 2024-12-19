@@ -2,7 +2,9 @@
 SendMode "Input"  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
-^+d::
+; KEYBOARD SHORTCUTS
+
+^+d:: ; Ctrl + Shift + D: Paste the current date and time
 {
     ; Get the current date and time
     date := FormatTime(A_Now, "dddd, MMMM d, yyyy")
@@ -14,6 +16,8 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     paste(currentDateTime)
 
 }
+
+; FUNCTIONS
 
 /*
     Function: paste
