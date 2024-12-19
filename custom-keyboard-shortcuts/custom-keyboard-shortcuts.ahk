@@ -52,11 +52,9 @@ paste(data) {
     Send('^v')
     ; Check repeatedly to see if the clipboard is still open
     loop
-        ; If more than 20 tries, notify of failure
-        if (A_Index > 20)
+        if (A_Index > 20) ; If more than 20 tries, notify of failure
             return TrayTip(A_ThisFunc ' failed to restore clipboard contents.')
-    ; Otherwise, wait another 100ms
-    else Sleep(100)
+        else Sleep(100) ; Otherwise, wait another 100ms
     until !DllCall('GetOpenClipboardWindow', 'Ptr')
     ; Finally, restore original clipboard contents
     A_Clipboard := clipbackup
