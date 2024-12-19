@@ -2,7 +2,11 @@
 SendMode "Input"  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
-^+d::
+; KEYBOARD SHORTCUTS
+
+; -----------------------Ctrl + Shift + key---------------------------
+
+^+d:: ; Ctrl + Shift + D: Paste the current date and time
 {
     ; Get the current date and time
     date := FormatTime(A_Now, "dddd, MMMM d, yyyy")
@@ -14,6 +18,24 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     paste(currentDateTime)
 
 }
+
+; ---------------------------Ctrl + key-------------------------------
+
+^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
+{
+    ; Open Windows Terminal
+    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+}
+
+^NumpadIns:: ; Ctrl + Numpad 0 (NumLock off): Open Windows Terminal
+{
+    ; Open Windows Terminal
+    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+}
+
+;---------------------------------------------------------------------
+
+; FUNCTIONS
 
 /*
     Function: paste
