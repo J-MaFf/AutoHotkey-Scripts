@@ -4,6 +4,8 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ; KEYBOARD SHORTCUTS
 
+; -----------------------Ctrl + Shift + key---------------------------
+
 ^+d:: ; Ctrl + Shift + D: Paste the current date and time
 {
     ; Get the current date and time
@@ -16,11 +18,23 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     paste(currentDateTime)
 
 }
-^+NumpadIns:: ; Ctrl + Shift + Numpad 0: Open Windows Terminal
+
+; ---------------------------Ctrl + key-------------------------------
+
+^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
 {
     ; Open Windows Terminal
     Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
 }
+
+^NumpadIns:: ; Ctrl + Numpad 0 (NumLock off): Open Windows Terminal
+{
+    ; Open Windows Terminal
+    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+}
+
+;---------------------------------------------------------------------
+
 ; FUNCTIONS
 
 /*
