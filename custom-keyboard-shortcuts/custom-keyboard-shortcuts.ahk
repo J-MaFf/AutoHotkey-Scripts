@@ -16,7 +16,11 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     paste(currentDateTime)
 
 }
-
+^+NumpadIns:: ; Ctrl + Shift + Numpad 0: Open Windows Terminal
+{
+    ; Open Windows Terminal
+    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+}
 ; FUNCTIONS
 
 /*
