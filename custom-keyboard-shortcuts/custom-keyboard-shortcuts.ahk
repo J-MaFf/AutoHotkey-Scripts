@@ -19,6 +19,27 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 }
 
+;------------------------Ctrl + Alt + key-----------------------------
+
+^!m:: ; Ctrl + Alt + M: Convert Markdown to HTML and copy to clipboard
+{
+    ; Copy selected text to clipboard
+    Send('^c')
+    Sleep(100) ; Wait for clipboard to update
+
+    ; Get the Markdown text from the clipboard
+    markdown := A_Clipboard
+
+    ; Convert Markdown to HTML (using a simple conversion function)
+    html := markdownToHTML(markdown)
+
+    ; Store the HTML in the clipboard
+    A_Clipboard := html
+
+    ; Notify the user
+    TrayTip("Markdown to HTML", "HTML copied to clipboard", 1)
+}
+
 ; ---------------------------Ctrl + key-------------------------------
 
 ^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
@@ -58,4 +79,34 @@ paste(data) {
     until !DllCall('GetOpenClipboardWindow', 'Ptr')
     ; Finally, restore original clipboard contents
     A_Clipboard := clipbackup
+}
+
+markdownToHtml(markdown) {
+    ; Prepare the command to send the Markdown text to the GitHub API
+    command :=
+        "curl -L -X POST -H `"Accept: application/vnd.github+json`" -H `"Authorization: Bearer <op://Employee/vysu2k4k3lx6aujev5m6ea36ly/credential>`" -H `"X-GitHub-Api-Version: 2022-11-28`" https://api.github.com/markdown -d `"{`"text`":`"" markdown` ""
+}
+` ""
+
+; Create a temporary file to store the markdown content
+tempFile := A_Temp "\markdown_input.md"
+FileAppend(markdown, tempFile)
+
+; Update the command to read from the temporary file
+command := command . " < " . tempFile
+
+; Run the command and get the result
+runWaitOne(command, html)
+
+; Delete the temporary file
+FileDelete(tempFile)
+
+return html
+}
+
+runWaitOne(command, &output) {
+    ; Run the command and capture the output
+    shell := ComObject("WScript.Shell")
+    exec := shell.Exec(command)
+    output := exec.StdOut.ReadAll()
 }
