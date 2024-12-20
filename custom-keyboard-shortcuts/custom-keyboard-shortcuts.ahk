@@ -12,10 +12,24 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     date := FormatTime(A_Now, "dddd, MMMM d, yyyy")
     time := FormatTime(A_Now, "h:mm tt")
 
+    ; Format the date and time
     currentDateTime := date . " @ " . time . ":"
 
     ; Paste the date and time
     paste(currentDateTime)
+
+}
+
+^+t:: ; Ctrl + Shift + T: Paste the current time
+{
+    ; Get the current time
+    time := FormatTime(A_Now, "h:mm tt")
+
+    ; Format the time
+    currentTime := time . ":"
+
+    ; Paste the time
+    paste(currentTime)
 
 }
 
@@ -39,7 +53,6 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Notify the user
     TrayTip("Markdown to HTML", "HTML copied to clipboard", 1)
 }
-
 ; ---------------------------Ctrl + key-------------------------------
 
 ^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
@@ -84,24 +97,22 @@ paste(data) {
 markdownToHtml(markdown) {
     ; Prepare the command to send the Markdown text to the GitHub API
     command :=
-        "curl -L -X POST -H `"Accept: application/vnd.github+json`" -H `"Authorization: Bearer <op://Employee/vysu2k4k3lx6aujev5m6ea36ly/credential>`" -H `"X-GitHub-Api-Version: 2022-11-28`" https://api.github.com/markdown -d `"{`"text`":`"" markdown` ""
-}
-` ""
+        "curl -L -X POST -H `"Accept: application/vnd.github+json`" -H `"Authorization: Bearer <op://Employee/vysu2k4k3lx6aujev5m6ea36ly/credential>`" -H `"X-GitHub-Api-Version: 2022-11-28`" https://api.github.com/markdown -d `"{`"text`":`"" markdown` ""` "}`"
 
-; Create a temporary file to store the markdown content
-tempFile := A_Temp "\markdown_input.md"
-FileAppend(markdown, tempFile)
+    ; Create a temporary file to store the markdown content
+    tempFile := A_Temp "\markdown_input.md"
+    FileAppend(markdown, tempFile)
 
-; Update the command to read from the temporary file
-command := command . " < " . tempFile
+    ; Update the command to read from the temporary file
+    command := command . " < " . tempFile
 
-; Run the command and get the result
-runWaitOne(command, html)
+    ; Run the command and get the result
+    runWaitOne(command, html)
 
-; Delete the temporary file
-FileDelete(tempFile)
+    ; Delete the temporary file
+    FileDelete(tempFile)
 
-return html
+    return html
 }
 
 runWaitOne(command, &output) {
