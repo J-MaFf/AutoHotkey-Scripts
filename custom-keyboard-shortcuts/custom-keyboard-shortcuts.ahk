@@ -12,10 +12,24 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     date := FormatTime(A_Now, "dddd, MMMM d, yyyy")
     time := FormatTime(A_Now, "h:mm tt")
 
+    ; Format the date and time
     currentDateTime := date . " @ " . time . ":"
 
     ; Paste the date and time
     paste(currentDateTime)
+
+}
+
+^+t:: ; Ctrl + Shift + T: Paste the current time
+{
+    ; Get the current time
+    time := FormatTime(A_Now, "h:mm tt")
+
+    ; Format the time
+    currentTime := time . ":"
+
+    ; Paste the time
+    paste(currentTime)
 
 }
 
