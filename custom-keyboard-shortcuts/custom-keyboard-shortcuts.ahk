@@ -94,6 +94,12 @@ paste(data) {
     A_Clipboard := clipbackup
 }
 
+/**
+ * Converts a given Markdown string to HTML.
+ * 
+ * @param {string} markdown - The Markdown string to be converted.
+ * @return {string} The converted HTML string.
+ */
 markdownToHtml(markdown) {
     ; Prepare the command to send the Markdown text to the GitHub API
     command :=
