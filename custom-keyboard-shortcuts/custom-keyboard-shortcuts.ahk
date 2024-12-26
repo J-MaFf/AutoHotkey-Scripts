@@ -71,12 +71,11 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ; FUNCTIONS
 
-/*
-    Function: paste
-    Description: This function backs up the clipboard, pastes the data, and then restores the clipboard.
-    Parameters:
-        data - The data to be pasted.
-*/
+/**
+ * @description This function is used to paste data to the active window. It first backs up the current clipboard contents, pastes the data, and then restores the original clipboard contents. This is useful when you want to paste data without losing the current clipboard contents.
+ * 
+ * @param {string} data - The data to be pasted.
+ */
 paste(data) {
     ; Backup clipboard
     clipbackup := ClipboardAll()
@@ -95,35 +94,55 @@ paste(data) {
 }
 
 /**
- * Converts a given Markdown string to HTML.
+ * @description Converts a given Markdown string to HTML.
  * 
  * @param {string} markdown - The Markdown string to be converted.
  * @return {string} The converted HTML string.
  */
 markdownToHtml(markdown) {
-    ; Prepare the command to send the Markdown text to the GitHub API
-    command :=
-        "curl -L -X POST -H `"Accept: application/vnd.github+json`" -H `"Authorization: Bearer <op://Employee/vysu2k4k3lx6aujev5m6ea36ly/credential>`" -H `"X-GitHub-Api-Version: 2022-11-28`" https://api.github.com/markdown -d `"{`"text`":`"" markdown` ""` "}`"
+    ; Define the temporary file path for the Markdown input
+    tempFile := A_Temp . "\markdown_input.md"
 
-    ; Create a temporary file to store the markdown content
-    tempFile := A_Temp "\markdown_input.md"
+    ; Delete the temporary file if it already exists
+    if FileExist(tempFile)
+        FileDelete(tempFile)
+
+    ; Write the Markdown content to the temporary file
     FileAppend(markdown, tempFile)
 
-    ; Update the command to read from the temporary file
-    command := command . " < " . tempFile
+    ; Construct the shell command to run the Python script for conversion
+    shellCommand := Format('{1} /c python "{2}" < "{3}" > "{4}"'
+        , A_ComSpec
+        , "C:\Users\jmaffiola\Documents\Scripts\markdown_to_html.py"
+        , tempFile
+        , tempFile . ".html")
 
-    ; Run the command and get the result
-    runWaitOne(command, html)
+    ; Execute the shell command and wait for it to complete
+    RunWait(shellCommand, , "Hide")
 
-    ; Delete the temporary file
-    FileDelete(tempFile)
+    ; Define the path for the HTML output file
+    htmlFile := tempFile . ".html"
 
+    ; Initialize an empty string to hold the HTML content
+    local html := ""
+
+    ; Read the HTML content from the output file if it exists
+    if FileExist(htmlFile) {
+        html := FileRead(htmlFile)
+        ; Delete the HTML output file after reading its content
+        FileDelete(htmlFile)
+    }
+
+    ; Return the converted HTML content
     return html
 }
 
-runWaitOne(command, &output) {
+runWaitOne(command, input, &output) {
     ; Run the command and capture the output
     shell := ComObject("WScript.Shell")
     exec := shell.Exec(command)
-    output := exec.StdOut.ReadAll()
+    exec.StdIn.Write(input)
+    exec.StdIn.Close()
+    while !exec.StdOut.AtEndOfStream
+        output .= exec.StdOut.ReadAll()
 }
