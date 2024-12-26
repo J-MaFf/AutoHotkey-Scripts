@@ -72,6 +72,7 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 ; FUNCTIONS
 
 /**
+ * @name paste
  * @description This function is used to paste data to the active window. It first backs up the current clipboard contents, pastes the data, and then restores the original clipboard contents. This is useful when you want to paste data without losing the current clipboard contents.
  * 
  * @param {string} data - The data to be pasted.
@@ -94,6 +95,7 @@ paste(data) {
 }
 
 /**
+ * @name markdownToHTML
  * @description Converts a given Markdown string to HTML.
  * 
  * @param {string} markdown - The Markdown string to be converted.
@@ -137,6 +139,14 @@ markdownToHtml(markdown) {
     return html
 }
 
+/**
+ * @name runWaitOne
+ * @description This function runs a command and captures the output in a single step.
+ * 
+ * @param command The command to run.
+ * @param input The input to pass to the command.
+ * @param output The variable to store the output in.
+ */
 runWaitOne(command, input, &output) {
     ; Run the command and capture the output
     shell := ComObject("WScript.Shell")
