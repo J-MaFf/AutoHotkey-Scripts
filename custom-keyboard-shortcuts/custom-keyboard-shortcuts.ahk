@@ -35,12 +35,8 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ;------------------------Ctrl + Alt + key-----------------------------
 
-^!m:: ; Ctrl + Alt + M: Convert Markdown to HTML and copy to clipboard
+^!m:: ; Ctrl + Alt + M: Convert Markdown to HTML
 {
-    ; Copy selected text to clipboard
-    Send('^c')
-    Sleep(100) ; Wait for clipboard to update
-
     ; Get the Markdown text from the clipboard
     markdown := A_Clipboard
 
@@ -50,8 +46,9 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Store the HTML in the clipboard
     A_Clipboard := html
 
-    ; Notify the user
-    TrayTip("Markdown to HTML", "HTML copied to clipboard", 1)
+    ; Notify the user that the HTML is ready
+    TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
+    MsgBox(html)
 }
 ; ---------------------------Ctrl + key-------------------------------
 
