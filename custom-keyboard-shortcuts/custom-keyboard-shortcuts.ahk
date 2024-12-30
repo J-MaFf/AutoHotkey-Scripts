@@ -48,7 +48,6 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
     ; Notify the user that the HTML is ready
     TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
-    MsgBox(html)
 }
 ; ---------------------------Ctrl + key-------------------------------
 
