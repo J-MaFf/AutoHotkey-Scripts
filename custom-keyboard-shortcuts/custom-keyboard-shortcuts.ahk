@@ -69,14 +69,16 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Notify the user that the HTML is ready
     TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
 }
-^+!h:: ; Caps Lock + H (Hyper Key + H): Convert highlighted text to uppercase
+^+!h:: ; Ctrl + Shift + Alt + H (Hyper key + H): Convert selected text to uppercase and paste
 {
     ; Get active window to ensure we can come back to it
     activeWin := WinGetID("A")
 
     ; Clear clipboard
     A_Clipboard := ""
-
+    ; Release all modifier keys to avoid interference with copy
+    Send("{Ctrl Up}{Shift Up}{Alt Up}")
+    Sleep(50)
     ; Copy selected text
     Send("^c")
 
