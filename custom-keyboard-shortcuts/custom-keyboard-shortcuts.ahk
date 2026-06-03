@@ -69,7 +69,7 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Notify the user that the HTML is ready
     TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
 }
-^!h:: ; Ctrl + Alt + H: Convert highlighted text to uppercase
+CapsLock & h:: ; Caps Lock + H: Convert highlighted text to uppercase
 {
     ; Get active window to ensure we can come back to it
     activeWin := WinGetID("A")
