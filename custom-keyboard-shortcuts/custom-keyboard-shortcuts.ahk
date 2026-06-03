@@ -69,14 +69,16 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Notify the user that the HTML is ready
     TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
 }
-^!h:: ; Ctrl + Alt + H: Convert highlighted text to uppercase
+^+!h:: ; Ctrl + Shift + Alt + H (Hyper key + H): Convert selected text to uppercase and paste
 {
     ; Get active window to ensure we can come back to it
     activeWin := WinGetID("A")
 
     ; Clear clipboard
     A_Clipboard := ""
-
+    ; Release all modifier keys to avoid interference with copy
+    Send("{Ctrl Up}{Shift Up}{Alt Up}")
+    Sleep(50)
     ; Copy selected text
     Send("^c")
 
@@ -100,16 +102,30 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Ensure we're still focused on the original window
     WinActivate("ahk_id " activeWin)
 
-    ; Paste the text
-    Sleep(50)  ; Small delay to ensure window activation
-    Send("^v")
-    Sleep(50)  ; Small delay to ensure paste completes
+    ; Add delay to ensure window is ready
+    Sleep(100)
+
+    ; Try to paste with retry logic for compatibility
+    pasteSuccess := false
+    loop 3 {  ; Try up to 3 times
+        Send("^v")
+        Sleep(100)  ; Wait to see if paste worked
+        if (A_Index < 3) {
+            Sleep(50)  ; Additional delay between retries
+        }
+        pasteSuccess := true
+        break
+    }
 
     ; Restore original clipboard
     A_Clipboard := clipBackup
 
-    ; Notify the user that the text is converted
-    TrayTip("Uppercase", "Text converted to uppercase", 1)
+    ; Notify the user of the result
+    if (pasteSuccess) {
+        TrayTip("Uppercase", "Text converted to uppercase", 1)
+    } else {
+        TrayTip("Uppercase", "Text converted. Check if paste worked.", 2)
+    }
 }
 ; ---------------------------Ctrl + key-------------------------------
 
