@@ -4,6 +4,26 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ; KEYBOARD SHORTCUTS
 
+; -----------------------Caps lock hyper key--------------------------
+
+*CapsLock::
+{
+    ; 1. Press down Ctrl, Alt, and Shift instantly
+    Send "{Ctrl Down}{Alt Down}{Shift Down}"
+
+    ; 2. Wait right here until you physically release the Caps Lock key
+    KeyWait "CapsLock"
+
+    ; 3. Release Ctrl, Alt, and Shift
+    Send "{Ctrl Up}{Alt Up}{Shift Up}"
+
+    ; 4. Check if you pressed another key while holding Caps Lock.
+    ; If you didn't, toggle the actual Caps Lock state.
+    if (A_PriorKey = "CapsLock") {
+        SetCapsLockState !GetKeyState("CapsLock", "T")
+    }
+}
+
 ; -----------------------Ctrl + Shift + key---------------------------
 
 ^+d:: ; Ctrl + Shift + D: Paste the current date and time
