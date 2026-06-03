@@ -4,6 +4,26 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ; KEYBOARD SHORTCUTS
 
+; -----------------------Caps lock hyper key--------------------------
+
+*CapsLock::
+{
+    ; 1. Press down Ctrl, Alt, and Shift instantly
+    Send "{Ctrl Down}{Alt Down}{Shift Down}"
+
+    ; 2. Wait right here until you physically release the Caps Lock key
+    KeyWait "CapsLock"
+
+    ; 3. Release Ctrl, Alt, and Shift
+    Send "{Ctrl Up}{Alt Up}{Shift Up}"
+
+    ; 4. Check if you pressed another key while holding Caps Lock.
+    ; If you didn't, toggle the actual Caps Lock state.
+    if (A_PriorKey = "CapsLock") {
+        SetCapsLockState !GetKeyState("CapsLock", "T")
+    }
+}
+
 ; -----------------------Ctrl + Shift + key---------------------------
 
 ^+d:: ; Ctrl + Shift + D: Paste the current date and time
@@ -48,6 +68,48 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
     ; Notify the user that the HTML is ready
     TrayTip("Markdown to HTML", "Ready to paste HTML", 1)
+}
+^!h:: ; Ctrl + Alt + H: Convert highlighted text to uppercase
+{
+    ; Get active window to ensure we can come back to it
+    activeWin := WinGetID("A")
+
+    ; Clear clipboard
+    A_Clipboard := ""
+
+    ; Copy selected text
+    Send("^c")
+
+    ; Wait for clipboard to contain data (timeout after 2 seconds)
+    if !ClipWait(2) {
+        ; Notify the user that the clipboard is empty
+        TrayTip("Error", "No text selected or clipboard operation failed", 1)
+        return
+    }
+
+    ; Get the text and convert to uppercase
+    lowercase := A_Clipboard
+    uppercase := StrUpper(lowercase)
+
+    ; Store original clipboard content
+    clipBackup := ClipboardAll()
+
+    ; Set clipboard to uppercase text
+    A_Clipboard := uppercase
+
+    ; Ensure we're still focused on the original window
+    WinActivate("ahk_id " activeWin)
+
+    ; Paste the text
+    Sleep(50)  ; Small delay to ensure window activation
+    Send("^v")
+    Sleep(50)  ; Small delay to ensure paste completes
+
+    ; Restore original clipboard
+    A_Clipboard := clipBackup
+
+    ; Notify the user that the text is converted
+    TrayTip("Uppercase", "Text converted to uppercase", 1)
 }
 ; ---------------------------Ctrl + key-------------------------------
 
