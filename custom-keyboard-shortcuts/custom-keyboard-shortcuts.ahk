@@ -105,16 +105,24 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Add delay to ensure window is ready
     Sleep(100)
 
-    ; Try to paste with retry logic for compatibility
+    ; Try to paste with retry logic — verify each attempt by checking
+    ; whether the clipboard still holds the uppercase text after paste.
+    ; Most applications clear or replace clipboard contents on a successful
+    ; paste; if it is unchanged we assume the paste failed and retry.
     pasteSuccess := false
     loop 3 {  ; Try up to 3 times
+        A_Clipboard := uppercase  ; Refresh clipboard in case a prior attempt cleared it
+        ClipWait(1)               ; Ensure clipboard is ready before sending
         Send("^v")
-        Sleep(100)  ; Wait to see if paste worked
-        if (A_Index < 3) {
-            Sleep(50)  ; Additional delay between retries
+        Sleep(150)  ; Give the target application time to consume the paste
+        if (A_Clipboard != uppercase) {
+            ; Clipboard was changed/consumed — paste succeeded
+            pasteSuccess := true
+            break
         }
-        pasteSuccess := true
-        break
+        if (A_Index < 3) {
+            Sleep(100)  ; Brief back-off before retrying
+        }
     }
 
     ; Restore original clipboard
