@@ -221,20 +221,3 @@ markdownToHtml(markdown) {
     return html
 }
 
-/**
- * @name runWaitOne
- * @description This function runs a command and captures the output in a single step.
- * 
- * @param command The command to run.
- * @param input The input to pass to the command.
- * @param output The variable to store the output in.
- */
-runWaitOne(command, input, &output) {
-    ; Run the command and capture the output
-    shell := ComObject("WScript.Shell")
-    exec := shell.Exec(command)
-    exec.StdIn.Write(input)
-    exec.StdIn.Close()
-    while !exec.StdOut.AtEndOfStream
-        output .= exec.StdOut.ReadAll()
-}
