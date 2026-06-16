@@ -50,10 +50,6 @@ This function pastes data to the active window while preserving the current clip
 
 This function converts a given Markdown string to HTML using a Python script.
 
-#### `runWaitOne(command, input, &output)`
-
-This function runs a command and captures the output in a single step.
-
 ## Requirements
 
 - AutoHotkey v2.0
