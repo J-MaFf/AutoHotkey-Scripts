@@ -131,14 +131,14 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
 {
-    ; Open Windows Terminal
-    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+    ; Open Windows Terminal via PATH (works for any user account when installed from the Store)
+    Run "wt"
 }
 
 ^NumpadIns:: ; Ctrl + Numpad 0 (NumLock off): Open Windows Terminal
 {
-    ; Open Windows Terminal
-    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+    ; Open Windows Terminal via PATH (works for any user account when installed from the Store)
+    Run "wt"
 }
 
 ;---------------------------------------------------------------------
