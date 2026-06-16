@@ -197,7 +197,7 @@ markdownToHtml(markdown) {
     ; Construct the shell command to run the Python script for conversion
     shellCommand := Format('{1} /c python "{2}" < "{3}" > "{4}"'
         , A_ComSpec
-        , ".\markdown_to_html.py"
+        , A_ScriptDir . "\markdown_to_html.py"
         , tempFile
         , tempFile . ".html")
 
