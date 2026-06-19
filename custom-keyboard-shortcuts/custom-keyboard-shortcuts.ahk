@@ -105,16 +105,24 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
     ; Add delay to ensure window is ready
     Sleep(100)
 
-    ; Try to paste with retry logic for compatibility
+    ; Try to paste with retry logic — verify each attempt by checking
+    ; whether the clipboard still holds the uppercase text after paste.
+    ; Most applications clear or replace clipboard contents on a successful
+    ; paste; if it is unchanged we assume the paste failed and retry.
     pasteSuccess := false
     loop 3 {  ; Try up to 3 times
+        A_Clipboard := uppercase  ; Refresh clipboard in case a prior attempt cleared it
+        ClipWait(1)               ; Ensure clipboard is ready before sending
         Send("^v")
-        Sleep(100)  ; Wait to see if paste worked
-        if (A_Index < 3) {
-            Sleep(50)  ; Additional delay between retries
+        Sleep(150)  ; Give the target application time to consume the paste
+        if (A_Clipboard != uppercase) {
+            ; Clipboard was changed/consumed — paste succeeded
+            pasteSuccess := true
+            break
         }
-        pasteSuccess := true
-        break
+        if (A_Index < 3) {
+            Sleep(100)  ; Brief back-off before retrying
+        }
     }
 
     ; Restore original clipboard
@@ -131,14 +139,14 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 ^Numpad0:: ; Ctrl + Numpad 0 (NumLock on): Open Windows Terminal
 {
-    ; Open Windows Terminal
-    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+    ; Open Windows Terminal via PATH (works for any user account when installed from the Store)
+    Run "wt"
 }
 
 ^NumpadIns:: ; Ctrl + Numpad 0 (NumLock off): Open Windows Terminal
 {
-    ; Open Windows Terminal
-    Run ("C:\Users\jmaffiola\AppData\Local\Microsoft\WindowsApps\wt.exe")
+    ; Open Windows Terminal via PATH (works for any user account when installed from the Store)
+    Run "wt"
 }
 
 ;---------------------------------------------------------------------
@@ -189,7 +197,7 @@ markdownToHtml(markdown) {
     ; Construct the shell command to run the Python script for conversion
     shellCommand := Format('{1} /c python "{2}" < "{3}" > "{4}"'
         , A_ComSpec
-        , ".\markdown_to_html.py"
+        , A_ScriptDir . "\markdown_to_html.py"
         , tempFile
         , tempFile . ".html")
 
@@ -213,20 +221,3 @@ markdownToHtml(markdown) {
     return html
 }
 
-/**
- * @name runWaitOne
- * @description This function runs a command and captures the output in a single step.
- * 
- * @param command The command to run.
- * @param input The input to pass to the command.
- * @param output The variable to store the output in.
- */
-runWaitOne(command, input, &output) {
-    ; Run the command and capture the output
-    shell := ComObject("WScript.Shell")
-    exec := shell.Exec(command)
-    exec.StdIn.Write(input)
-    exec.StdIn.Close()
-    while !exec.StdOut.AtEndOfStream
-        output .= exec.StdOut.ReadAll()
-}

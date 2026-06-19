@@ -23,7 +23,21 @@ The `custom-keyboard-shortcuts.ahk` script defines several keyboard shortcuts fo
 
 ### Markdown to HTML Conversion
 
+Use the **Ctrl + Alt + M** shortcut to convert Markdown text to HTML:
 
+1. Copy your Markdown text to the clipboard.
+2. Press **Ctrl + Alt + M**.
+3. The converted HTML is placed back on the clipboard.
+4. Paste the result wherever you need it. A tray notification confirms when the HTML is ready.
+
+The conversion is performed by `markdown_to_html.py` using the Python `markdown` library. The script is invoked via `cmd.exe` and reads from / writes to a temporary file in `%TEMP%`.
+
+**Prerequisites:**
+- Python must be on `PATH`.
+- The `markdown` library must be installed:
+  ```sh
+  pip install markdown
+  ```
 
 
 ### Functions
@@ -35,10 +49,6 @@ This function pastes data to the active window while preserving the current clip
 #### `markdownToHtml(markdown)`
 
 This function converts a given Markdown string to HTML using a Python script.
-
-#### `runWaitOne(command, input, &output)`
-
-This function runs a command and captures the output in a single step.
 
 ## Requirements
 
