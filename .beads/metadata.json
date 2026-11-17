@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "AutoHotkey_Scripts",
+  "project_id": "3378f940-b476-4cc9-a134-dae5393d0b23"
+}
